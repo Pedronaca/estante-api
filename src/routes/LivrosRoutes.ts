@@ -1,5 +1,5 @@
 import { FastifyInstance, FastifyReply, FastifyRequest } from "fastify";
-import { LivrosController } from "../controllers/LivrosController.js";
+import { LivrosController } from "../controllers/LivrosController.ts";
 
 export interface LivrosRequestParams {
     id: number;
@@ -20,23 +20,28 @@ export interface LivrosRequestBody {
 }
 
 export default async function LivrosRoutes(fastify: FastifyInstance) {
-    fastify.get('/livros', async (request: FastifyRequest, reply: FastifyReply) => {
+    // Rota GET para obter todos os livros com autenticação
+    fastify.get('/livros', { preHandler: [fastify.authenticate] }, async (request, reply) => {
         await LivrosController.getAll(request, reply);
     });
 
-    fastify.get('/livros/user/:idUsuario', async (request: FastifyRequest<{ Params: LivrosRequestParams }>, reply: FastifyReply) => {
+    // Rota GET para obter livros de um usuário específico com autenticação
+    fastify.get('/livros/user/:idUsuario', { preHandler: [fastify.authenticate] }, async (request: FastifyRequest<{ Params: LivrosRequestParams }>, reply: FastifyReply) => {
         await LivrosController.selectLivros(request, reply);
     });
 
-    fastify.post('/livros', async (request: FastifyRequest<{ Body: LivrosRequestBody }>, reply: FastifyReply) => {
+    // Rota POST para criar um novo livro com autenticação
+    fastify.post('/livros', { preHandler: [fastify.authenticate] }, async (request: FastifyRequest<{ Body: LivrosRequestBody }>, reply: FastifyReply) => {
         await LivrosController.createLivro(request, reply);
     });
 
-    fastify.put('/livros/:id', async (request: FastifyRequest<{ Body: LivrosRequestBody }>, reply: FastifyReply) => {
+    // Rota PUT para atualizar um livro existente com autenticação
+    fastify.put('/livros/:id', { preHandler: [fastify.authenticate] }, async (request: FastifyRequest<{ Body: LivrosRequestBody }>, reply: FastifyReply) => {
         await LivrosController.updateLivro(request, reply);
     });
 
-    fastify.delete('/livros/:id', async (request: FastifyRequest<{ Params: LivrosRequestParams }>, reply: FastifyReply) => {
+    // Rota DELETE para remover um livro com autenticação
+    fastify.delete('/livros/:id', { preHandler: [fastify.authenticate] }, async (request: FastifyRequest<{ Params: LivrosRequestParams }>, reply: FastifyReply) => {
         await LivrosController.deleteLivro(request, reply);
     });
 }
