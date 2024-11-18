@@ -1,7 +1,7 @@
 import fastifyCors from '@fastify/cors';
 import { fastify } from 'fastify'
 import { db } from './dal/db.js';
-import LivrosRoutes from './routes/LivrosRoutes.js';
+import LivrosRoutes from './routes/LivrosRoutes.ts';
 
 const server = fastify();
 

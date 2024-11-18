@@ -16,27 +16,27 @@ export interface LivrosRequestBody {
         autor: string;
         dtPubli: Date;
         lido: boolean;
-    }
+    };
 }
 
 export default async function LivrosRoutes(fastify: FastifyInstance) {
-    // fastify.get('/livros', async (request: FastifyRequest, reply: FastifyReply) => {
-    //     // await UserController.select(reply);
-    // });
+    fastify.get('/livros', async (request: FastifyRequest, reply: FastifyReply) => {
+        await LivrosController.getAll(request, reply);
+    });
 
     fastify.get('/livros/user/:idUsuario', async (request: FastifyRequest<{ Params: LivrosRequestParams }>, reply: FastifyReply) => {
         await LivrosController.selectLivros(request, reply);
     });
 
-    // fastify.post('/livros', async (request: FastifyRequest<{ Body: LivrosRequestBody }>, reply: FastifyReply) => {
-    //     // await UserController.registrer(request, reply);
-    // });
+    fastify.post('/livros', async (request: FastifyRequest<{ Body: LivrosRequestBody }>, reply: FastifyReply) => {
+        await LivrosController.createLivro(request, reply);
+    });
 
-    // fastify.put('/livros/:id', async (request: FastifyRequest<{ Body: LivrosRequestBody }>, reply: FastifyReply) => {
-    //     // await UserController.update(request, reply);
-    // });
+    fastify.put('/livros/:id', async (request: FastifyRequest<{ Body: LivrosRequestBody }>, reply: FastifyReply) => {
+        await LivrosController.updateLivro(request, reply);
+    });
 
-    // fastify.delete('/livros/:id', async (request: FastifyRequest<{ Params: LivrosRequestParams }>, reply: FastifyReply) => {
-    //     // await UserController.delete(request, reply);
-    // });
+    fastify.delete('/livros/:id', async (request: FastifyRequest<{ Params: LivrosRequestParams }>, reply: FastifyReply) => {
+        await LivrosController.deleteLivro(request, reply);
+    });
 }
