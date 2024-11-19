@@ -1,5 +1,5 @@
 import { LivrosDal } from "../dal/LivrosDal.ts";
-import { LivrosModel } from "../models/LivrosModel.ts";
+import { LivrosModel } from "../models/LivrosModel";
 
 export class LivroBll {
     static async selectLivros(idUsuario: number): Promise<LivrosModel[]> { 

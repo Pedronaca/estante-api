@@ -1,8 +1,9 @@
 import fastifyCors from '@fastify/cors';
 import { fastify } from 'fastify';
-import { db } from './dal/db.ts';
-import LivrosRoutes from './routes/LivrosRoutes.ts';
+import { db } from './dal/db';
+import LivrosRoutes from './routes/LivrosRoutes';
 import fastifyJwt from "@fastify/jwt";
+import UserRoutes from './routes/UserRoutes';
 
 const server = fastify();
 
@@ -52,3 +53,5 @@ server.listen({
     }
     console.log(`Server running at ${address} 🚀`);
 });
+
+server.register(UserRoutes);

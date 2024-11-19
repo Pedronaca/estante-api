@@ -1,5 +1,5 @@
 import { FastifyInstance, FastifyReply, FastifyRequest } from "fastify";
-import { LivrosController } from "../controllers/LivrosController.ts";
+import { LivrosController } from "../controllers/LivrosController";
 
 export interface LivrosRequestParams {
     id: number;

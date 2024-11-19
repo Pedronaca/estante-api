@@ -1,5 +1,5 @@
-import { LivrosModel } from "../models/LivrosModel.ts";
-import { db } from "./db.ts";
+import { LivrosModel } from "../models/LivrosModel";
+import { db } from "./db";
 
 export class LivrosDal {
 
