@@ -2,7 +2,7 @@ POST http://localhost:3333/login
 Content-Type: application/json
 
 {
-    "email": "a@g.c",
+    "email": "t@g.c",
     "password": "1234"
 }
 
@@ -12,7 +12,16 @@ POST http://localhost:3333/register
 Content-Type: application/json
 
 {
-    "name": "Pedro",
-    "email": "aa@g.c",
+    "name": "teste",
+    "email": "t@g.c",
     "password": "1234"
 }
+
+###
+
+GET http://localhost:3333/livros/4
+
+###
+
+POST http://localhost:3333/livros
+Content-Type: application/json

@@ -1,16 +1,12 @@
 import fastifyCors from '@fastify/cors';
 import { fastify } from 'fastify';
-import { db } from './dal/db.js';
 import LivrosRoutes from './routes/LivrosRoutes.js';
-import fastifyJwt from "@fastify/jwt";
 import UserRoutes from './routes/UserRoutes.js';
 import authRoutes from './routes/AuthRoutes.js';
 
 const server = fastify();
 
-db.dbTime();
-
-// server.register(LivrosRoutes);
+server.register(LivrosRoutes);
 // server.register(UserRoutes);
 server.register(authRoutes);
 

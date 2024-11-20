@@ -1,38 +1,53 @@
-import { LivrosModel } from "../models/LivrosModel.js";
-import { db } from "./db.js";
+import { PrismaClient } from "@prisma/client";
+
+const prisma = new PrismaClient();
 
 export class LivrosDal {
-
-    static async selectLivros(idUsuario: number): Promise<LivrosModel[]> {
+    static async selectLivros(idUsuario: any) {
         try {
-            const query = {
-                text: 'SELECT * FROM livros WHERE id_usuario = $1;',
-                values: [idUsuario],
-            }
+            console.log(`Buscando livros para o usuário com ID: ${idUsuario}`);
+            const res = await prisma.livros.findMany({
+                where: {
+                    id_usuario: idUsuario
+                }
+            });
 
-            const res = await db.pool.query(query);
-
-            if (res.rowCount! > 0) {
-                return res.rows.map(row => new LivrosModel(
-                    row.id,
-                    row.id_usuario,
-                    row.id_genero,
-                    row.nome,
-                    row.num_pag,
-                    row.autor,
-                    row.db_publi,
-                    row.lido,
-                ));
-            }
-
-            return [];
+            return res;
         } catch (error: any) {
             console.error(`Erro ao buscar livros: ${error.message}`);
             throw error.message;
         }
     }
 
-    // static async create(user: UserModel): Promise<> { }
+    static async selectAll() {
+        try {
+            return await prisma.livros.findMany()
+        } catch (error: any) {
+            console.error(`Erro ao buscar livros: ${error.message}`);
+            throw error.message;
+        }
+    }
+
+    static async create(idUsuario: string, idGenero: number, nome: string, numPag: number, autor: string, dtPubli: Date, lido: boolean) {
+        try {
+            const res = await prisma.livros.create({
+                data: {
+                    id_usuario: idUsuario,
+                    id_genero: idGenero,
+                    nome: nome,
+                    num_pag: numPag,
+                    autor: autor,
+                    dt_publi: dtPubli,
+                    lido: lido
+                }
+            })
+
+            return res;
+        } catch (error) {
+            console.error("Erro ao inserir usuário:", error);
+            throw error;
+        }
+    }
 
     // static async update(user: UserModel): Promise<> { }
 
