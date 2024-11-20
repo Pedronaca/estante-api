@@ -1,5 +1,5 @@
-import { LivrosModel } from "../models/LivrosModel";
-import { db } from "./db";
+import { LivrosModel } from "../models/LivrosModel.js";
+import { db } from "./db.js";
 
 export class LivrosDal {
 

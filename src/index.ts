@@ -1,46 +1,22 @@
 import fastifyCors from '@fastify/cors';
 import { fastify } from 'fastify';
-import { db } from './dal/db';
-import LivrosRoutes from './routes/LivrosRoutes';
+import { db } from './dal/db.js';
+import LivrosRoutes from './routes/LivrosRoutes.js';
 import fastifyJwt from "@fastify/jwt";
-import UserRoutes from './routes/UserRoutes';
+import UserRoutes from './routes/UserRoutes.js';
+import authRoutes from './routes/AuthRoutes.js';
 
 const server = fastify();
 
-server.register(fastifyJwt, {
-    secret: 'My$eCur3t0kenKey!1234@#',
-});
-
-server.decorate("authenticate", async (request, reply) => {
-    try {
-        await request.jwtVerify();
-    } catch (error) {
-        reply.send(error);
-    }
-});
-
 db.dbTime();
 
-server.register(LivrosRoutes);
+// server.register(LivrosRoutes);
+// server.register(UserRoutes);
+server.register(authRoutes);
 
 server.register(fastifyCors, {
     origin: true,
     methods: ['GET', 'POST', 'PUT', 'DELETE'],
-});
-
-server.post('/login', async (request, reply) => {
-    const { username, password } = request.body as { username: string; password: string };
-
-    if (username === 'usuario' && password === 'senha') {
-        const token = server.jwt.sign({ username });
-        return reply.send({ token });
-    }
-
-    reply.status(401).send({ message: 'Credenciais inválidas' });
-});
-
-server.get('/protected', { preHandler: [server.authenticate] }, async (request, reply) => {
-    return reply.send({ message: 'Você acessou uma rota protegida!' });
 });
 
 server.listen({
@@ -53,5 +29,3 @@ server.listen({
     }
     console.log(`Server running at ${address} 🚀`);
 });
-
-server.register(UserRoutes);

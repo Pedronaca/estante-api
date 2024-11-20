@@ -1,5 +1,5 @@
-import { LivrosDal } from "../dal/LivrosDal.ts";
-import { LivrosModel } from "../models/LivrosModel";
+import { LivrosDal } from "../dal/LivrosDal.js";
+import { LivrosModel } from "../models/LivrosModel.js";
 
 export class LivroBll {
     static async selectLivros(idUsuario: number): Promise<LivrosModel[]> { 
@@ -13,8 +13,4 @@ export class LivroBll {
             throw error.message;
         }
     }
-
-    // static async update(id: number): Promise<> { }
-
-    // static async delete(id: number): Promise<> { }
 }

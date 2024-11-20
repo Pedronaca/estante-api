@@ -1,4 +1,4 @@
-import { UserDal } from "../dal/UserDal";
+import { UserDal } from "../dal/UserDal.js";
 
 export class UserBll {
     static async deleteUser(id: number) {

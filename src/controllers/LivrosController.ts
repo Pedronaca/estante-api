@@ -1,7 +1,7 @@
 import { FastifyReply, FastifyRequest } from "fastify";
-import { LivrosRequestBody, LivrosRequestParams } from "../routes/LivrosRoutes";
-import { LivrosModel } from "../models/LivrosModel";
-import { LivrosBll } from "../bll/LivrosBll";
+import { LivrosRequestBody, LivrosRequestParams } from "../routes/LivrosRoutes.js";
+import { LivrosModel } from "../models/LivrosModel.js";
+import { LivrosBll } from "../bll/LivrosBll.js";
 
 export class LivrosController {
     static async selectLivros(request: FastifyRequest<{ Params: LivrosRequestParams }>, reply: FastifyReply) {

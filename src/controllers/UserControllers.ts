@@ -1,5 +1,5 @@
 import { FastifyReply, FastifyRequest } from "fastify";
-import { UserBll } from "../bll/UserBll";
+import { UserBll } from "../bll/UserBll.js";
 
 export class UserController {
     static async deleteUser(request: FastifyRequest<{ Params: { id: number } }>, reply: FastifyReply) {

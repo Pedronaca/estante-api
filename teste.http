@@ -1,1 +1,18 @@
-GET http://localhost:3333/livros/login/1
+POST http://localhost:3333/login
+Content-Type: application/json
+
+{
+    "email": "a@g.c",
+    "password": "1234"
+}
+
+###
+
+POST http://localhost:3333/register
+Content-Type: application/json
+
+{
+    "name": "Pedro",
+    "email": "aa@g.c",
+    "password": "1234"
+}
