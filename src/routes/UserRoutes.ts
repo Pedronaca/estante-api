@@ -1,17 +1,11 @@
 import { FastifyInstance, FastifyReply, FastifyRequest } from "fastify";
 import { UserDal } from "../dal/UserDal.js";
 
-
 export interface UserRequestParams {
     id: string;
 }
 
-
 export default async function UserRoutes(fastify: FastifyInstance) {
-    fastify.delete('/users/:id', async (request: FastifyRequest, reply: FastifyReply) => {
-        // await UserController.deleteUser(request, reply);
-    });
-
     fastify.get('/users', async (request: FastifyRequest, reply: FastifyReply) => {
         try {
             const res = await UserDal.getUserGroup();
@@ -28,7 +22,6 @@ export default async function UserRoutes(fastify: FastifyInstance) {
     });
 
     fastify.get('/user/:id', async (request: FastifyRequest<{ Params: UserRequestParams }>, reply: FastifyReply) => {
-        // await UserController.selectById(request, reply);
         try {
             const res = await UserDal.selectById(request.params.id);
 

@@ -56,6 +56,23 @@ export default async function LivrosRoutes(fastify: FastifyInstance) {
         }
     });
 
+    fastify.get('/livros/:idUsuario/ler', async (request: FastifyRequest<{ Params: LivrosRequestParams }>, reply) => {
+        try {
+            const idUsuario = request.params.idUsuario
+
+            const res = await LivrosDal.getReadBooks(idUsuario);
+
+            if (res) {
+                return reply.code(200).send(res);
+            }
+
+            return reply.code(401).send({ message: "Não foi possível selecionar os livros para ler" });
+        } catch (error) {
+            console.error(error);
+            return reply.code(500).send({ message: "Erro interno do servidor" });
+        }
+    });
+
     fastify.get('/livros/usuario/:idUsuario',
         async (request: FastifyRequest<{ Params: LivrosRequestParams }>, reply: FastifyReply) => {
             try {
@@ -137,6 +154,51 @@ export default async function LivrosRoutes(fastify: FastifyInstance) {
     fastify.post('/livro/favoritar/:id/:idUsuario', async (request: FastifyRequest<{ Params: LivrosRequestParams }>, reply: FastifyReply) => {
         try {
             const res = await LivrosDal.favoritar(request.params.id, request.params.idUsuario)
+
+            if (res) {
+                return reply.code(200).send(res);
+            }
+
+            return reply.code(401).send({ message: "Não foi possível favoritar livro" });
+        } catch (error) {
+            console.error(error);
+            return reply.code(500).send({ message: "Erro interno do servidor" });
+        }
+    });
+
+    fastify.delete('/livro/favoritar/:id/:idUsuario', async (request: FastifyRequest<{ Params: LivrosRequestParams }>, reply: FastifyReply) => {
+        try {
+            const res = await LivrosDal.desfavoritar(request.params.id, request.params.idUsuario)
+
+            if (res) {
+                return reply.code(200).send(res);
+            }
+
+            return reply.code(401).send({ message: "Não foi possível favoritar livro" });
+        } catch (error) {
+            console.error(error);
+            return reply.code(500).send({ message: "Erro interno do servidor" });
+        }
+    });
+
+    fastify.post('/livro/ler/:id/:idUsuario', async (request: FastifyRequest<{ Params: LivrosRequestParams }>, reply: FastifyReply) => {
+        try {
+            const res = await LivrosDal.ler(request.params.id, request.params.idUsuario)
+
+            if (res) {
+                return reply.code(200).send(res);
+            }
+
+            return reply.code(401).send({ message: "Não foi possível favoritar livro" });
+        } catch (error) {
+            console.error(error);
+            return reply.code(500).send({ message: "Erro interno do servidor" });
+        }
+    });
+
+    fastify.delete('/livro/ler/:id/:idUsuario', async (request: FastifyRequest<{ Params: LivrosRequestParams }>, reply: FastifyReply) => {
+        try {
+            const res = await LivrosDal.desLer(request.params.id, request.params.idUsuario)
 
             if (res) {
                 return reply.code(200).send(res);

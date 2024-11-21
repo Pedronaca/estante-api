@@ -3,16 +3,35 @@ import { PrismaClient } from "@prisma/client";
 const prisma = new PrismaClient();
 
 export class LivrosDal {
-    static async selectLivros(idUsuario: any) {
+    static async selectLivros(idUsuario: string) {
         try {
             console.log(`Buscando livros para o usuário com ID: ${idUsuario}`);
-            const res = await prisma.livros.findMany({
+            
+            const livros = await prisma.livros.findMany({
                 where: {
-                    id_usuario: idUsuario
-                }
+                    id_usuario: idUsuario,
+                },
+                include: {
+                    favoritos: {
+                        where: {
+                            id_usuario: idUsuario,
+                        },
+                    },
+                    quero_ler: {
+                        where: {
+                            id_usuario: idUsuario,
+                        },
+                    },
+                },
             });
-
-            return res;
+    
+            const livrosComStatus = livros.map(({ favoritos, quero_ler, ...livro }) => ({
+                ...livro,
+                favorito: favoritos.length > 0,
+                queroLer: quero_ler.length > 0,
+            }));
+    
+            return livrosComStatus;
         } catch (error: any) {
             console.error(`Erro ao buscar livros: ${error.message}`);
             throw error.message;
@@ -21,19 +40,74 @@ export class LivrosDal {
     
     static async getFavoriteBooks(idUsuario: string) {
         try {
-            const res = await prisma.livros.findMany({
+            const livros = await prisma.livros.findMany({
                 where: {
                     favoritos: {
                         some: {
-                            id_usuario: idUsuario
-                        }
-                    }
-                }
+                            id_usuario: idUsuario,
+                        },
+                    },
+                },
+                include: {
+                    favoritos: {
+                        where: {
+                            id_usuario: idUsuario,
+                        },
+                    },
+                    quero_ler: {
+                        where: {
+                            id_usuario: idUsuario,
+                        },
+                    },
+                },
             });
     
-            return res;
+            const livrosComStatus = livros.map(({ favoritos, quero_ler, ...livro }) => ({
+                ...livro,
+                favorito: favoritos.length > 0,
+                queroLer: quero_ler.length > 0,
+            }));
+    
+            return livrosComStatus;
         } catch (error: any) {
-            console.error(`Erro ao buscar livros favoritos: ${error.message}`);
+            console.error(`Erro ao buscar livros que quero ler: ${error.message}`);
+            throw error.message;
+        }
+    }
+
+    static async getReadBooks(idUsuario: string) {
+        try {
+            const livros = await prisma.livros.findMany({
+                where: {
+                    quero_ler: {
+                        some: {
+                            id_usuario: idUsuario,
+                        },
+                    },
+                },
+                include: {
+                    favoritos: {
+                        where: {
+                            id_usuario: idUsuario,
+                        },
+                    },
+                    quero_ler: {
+                        where: {
+                            id_usuario: idUsuario,
+                        },
+                    },
+                },
+            });
+    
+            const livrosComStatus = livros.map(({ favoritos, quero_ler, ...livro }) => ({
+                ...livro,
+                favorito: favoritos.length > 0,
+                queroLer: quero_ler.length > 0,
+            }));
+    
+            return livrosComStatus;
+        } catch (error: any) {
+            console.error(`Erro ao buscar livros que quero ler: ${error.message}`);
             throw error.message;
         }
     }
@@ -47,15 +121,21 @@ export class LivrosDal {
                             id_usuario: userId,
                         },
                     },
+                    quero_ler: {
+                        where: {
+                            id_usuario: userId,
+                        },
+                    },
                 },
             });
     
-            const livrosComFavorito = livros.map(({ favoritos, ...livro }) => ({
+            const livrosComStatus = livros.map(({ favoritos, quero_ler, ...livro }) => ({
                 ...livro,
                 favorito: favoritos.length > 0,
+                queroLer: quero_ler.length > 0,
             }));
     
-            return livrosComFavorito;
+            return livrosComStatus;
         } catch (error: any) {
             console.error(`Erro ao buscar livros: ${error.message}`);
             throw error.message;
@@ -134,6 +214,54 @@ export class LivrosDal {
             return favorito;
         } catch (error) {
             console.error("Erro ao favoritar o livro:", error);
+            throw error;
+        }
+    }
+
+    static async desfavoritar(idLivro: string, idUsuario: string) {
+        try {
+            const favorito = await prisma.favoritos.deleteMany({
+                where: {
+                    id_livro: idLivro,
+                    id_usuario: idUsuario
+                }
+            });
+    
+            return favorito;
+        } catch (error) {
+            console.error("Erro ao favoritar o livro:", error);
+            throw error;
+        }
+    }
+
+    static async ler(idLivro: string, idUsuario: string) {
+        try {
+            const favorito = await prisma.quero_ler.create({
+                data: {
+                    id_livro: idLivro,
+                    id_usuario: idUsuario,
+                },
+            });
+    
+            return favorito;
+        } catch (error) {
+            console.error("Erro ao marcar leitura do livro:", error);
+            throw error;
+        }
+    }
+
+    static async desLer(idLivro: string, idUsuario: string) {
+        try {
+            const favorito = await prisma.quero_ler.deleteMany({
+                where: {
+                    id_livro: idLivro,
+                    id_usuario: idUsuario
+                }
+            });
+    
+            return favorito;
+        } catch (error) {
+            console.error("Erro ao desmarcar leitura do livro:", error);
             throw error;
         }
     }
