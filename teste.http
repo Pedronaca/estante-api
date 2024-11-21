@@ -22,6 +22,27 @@ Content-Type: application/json
 GET http://localhost:3333/livros/4
 
 ###
-
 POST http://localhost:3333/livros
+Content-Type: application/json 
+
+###
+GET http://localhost:3333/generos
+Content-Type: application/json
+
+###
+GET http://localhost:3333/user/2abde128-e955-4949-86b4-a523874fb7e7
+Content-Type: application/json
+
+###
+GET http://localhost:3333/users
+Content-Type: application/json
+
+###
+
+GET http://localhost:3333/livros/2abde128-e955-4949-86b4-a523874fb7e7/favoritos
+Content-Type: application/json
+
+###
+
+GET http://localhost:3333/livros/2abde128-e955-4949-86b4-a523874fb7e7
 Content-Type: application/json

@@ -3,12 +3,14 @@ import { fastify } from 'fastify';
 import LivrosRoutes from './routes/LivrosRoutes.js';
 import UserRoutes from './routes/UserRoutes.js';
 import authRoutes from './routes/AuthRoutes.js';
+import GenerosRoutes from './routes/GenerosRoutes.js';
 
 const server = fastify();
 
 server.register(LivrosRoutes);
-// server.register(UserRoutes);
+server.register(UserRoutes);
 server.register(authRoutes);
+server.register(GenerosRoutes);
 
 server.register(fastifyCors, {
     origin: true,

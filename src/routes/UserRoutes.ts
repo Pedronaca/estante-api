@@ -1,24 +1,47 @@
 import { FastifyInstance, FastifyReply, FastifyRequest } from "fastify";
-import { UserController } from "../controllers/UserController";
+import { UserDal } from "../dal/UserDal.js";
+
+
+export interface UserRequestParams {
+    id: string;
+}
+
 
 export default async function UserRoutes(fastify: FastifyInstance) {
-    // Deletar usuário
-    fastify.delete('/users/:id', { preHandler: [fastify.authenticate] }, async (request: FastifyRequest, reply: FastifyReply) => {
-        await UserController.deleteUser(request, reply);
+    fastify.delete('/users/:id', async (request: FastifyRequest, reply: FastifyReply) => {
+        // await UserController.deleteUser(request, reply);
     });
 
-    // Atualizar usuário
-    fastify.put('/users/:id', { preHandler: [fastify.authenticate] }, async (request: FastifyRequest, reply: FastifyReply) => {
-        await UserController.updateUser(request, reply);
+    fastify.get('/users', async (request: FastifyRequest, reply: FastifyReply) => {
+        try {
+            const res = await UserDal.getUserGroup();
+
+            if (res) {
+                return reply.code(200).send(res);
+            }
+
+            return reply.code(401).send({ message: "Não foi possível selecionar usuários" });
+        } catch (error) {
+            console.error(error);
+            return reply.code(500).send({ message: "Erro interno do servidor" });
+        }
     });
 
-    // Selecionar usuário por ID
-    fastify.get('/users/:id', { preHandler: [fastify.authenticate] }, async (request: FastifyRequest, reply: FastifyReply) => {
-        await UserController.selectById(request, reply);
-    });
+    fastify.get('/user/:id', async (request: FastifyRequest<{ Params: UserRequestParams }>, reply: FastifyReply) => {
+        // await UserController.selectById(request, reply);
+        try {
+            const res = await UserDal.selectById(request.params.id);
 
-    // Selecionar usuário por e-mail
-    fastify.get('/users/email/:email', { preHandler: [fastify.authenticate] }, async (request: FastifyRequest, reply: FastifyReply) => {
-        await UserController.selectByEmail(request, reply);
+            console.log(res)
+
+            if (res) {
+                return reply.code(200).send(res);
+            }
+
+            return reply.code(401).send({ message: "Não foi possível selecionar usuário" });
+        } catch (error) {
+            console.error(error);
+            return reply.code(500).send({ message: "Erro interno do servidor" });
+        }
     });
 }

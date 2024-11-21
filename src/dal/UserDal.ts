@@ -49,4 +49,44 @@ export class UserDal {
             throw error;
         }
     }
+
+    static async getUserGroup() {
+        try {
+            const res = await prisma.livros.groupBy({
+                by: ['id_usuario'],
+                _count: {
+                    id: true,
+                },
+                orderBy: {
+                    _count: {
+                        id: 'desc',
+                    },
+                },
+            });
+
+            const userIds = res.map(group => group.id_usuario);
+
+            const users = await prisma.usuarios.findMany({
+                where: {
+                    id: {
+                        in: userIds.filter(id => id !== null),
+                    },
+                },
+            });
+
+            const result = res.map(group => {
+                const user = users.find(user => user.id === group.id_usuario);
+                return {
+                    userId: group.id_usuario,
+                    userName: user ? user.nome : 'Usuário não encontrado',
+                    bookCount: group._count.id,
+                };
+            });
+
+            return result;
+        } catch (error) {
+            console.error("Erro ao agrupar os usuários:", error);
+            throw error;
+        }
+    }
 }
